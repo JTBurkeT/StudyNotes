@@ -145,7 +145,7 @@ INSERT INTO index_demo VALUES(4, 4, 'a');
 
 ![image-20220616160216525](MySQL索引及调优篇.assets/image-20220616160216525.png)
 
-这个过程表明了在对页中的记录进行增删改查操作的过程中，我们必须通过一些诸如 **记录移动** 的操作来始终保证这个状态一直成立：下一个数据页中用户记录的主键值必须大于上一个页中用户记录的主键值。这个过程称为 **页分裂**。
+这个过程表明了在对页中的记录进行增删改查操作的过程中，我们必须通过一些诸如 **记录移动** 的操作来始终保证这个状态一直成立：下一个数据页中用户记录的主键值必须大于上一个页中用户记录的主键值。这个过程称为 **页分裂**。This process illustrates that during operations such as insertions, deletions, updates, and queries on records within pages, it is necessary to ensure the validity of the statement: the primary key value of user records in the next data page must be greater than the primary key value in the previous page. This process is referred to as **page splitting**.
 
 * **给所有的页建立一个目录项。**
 
