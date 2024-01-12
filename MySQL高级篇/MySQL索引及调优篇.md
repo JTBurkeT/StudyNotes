@@ -330,6 +330,8 @@ InnoDB怎么区分一条记录是普通的 **用户记录** 还是 **目录项�
 ### 3.4 InnoDB的B+树索引的注意事项
 
 #### 1. 根页面位置万年不动
+Example: Lets said the data page is created from A to C. A is created at first addition then when it becomes full, it will duplicate its leaf and then A will move upwards storing the page index for B, while B will be storing the original info of the data. Note: only leaf node can store data.
+
 
 实际上B+树的形成过程是这样的：
 
