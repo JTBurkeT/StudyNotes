@@ -397,6 +397,22 @@ MyISAM引擎使用 B+Tree 作为索引结构，叶子节点的data域存放的�
 
 **MyISAM的索引方式都是“非聚簇”的，与InnoDB包含1个聚簇索引是不同的。小结两种引擎中索引的区别：**
 
+Clustering vs. Non-Clustering:
+
+In MyISAM, all indexes are "non-clustered," whereas InnoDB includes a clustered index, which is typically the primary key. In InnoDB, a single search using the primary key can directly locate the corresponding record, while MyISAM requires a lookup operation, meaning MyISAM's indexes function essentially as secondary indexes.
+Storage Structure:
+
+InnoDB's data file itself serves as the index file, whereas MyISAM keeps index and data files separate, with the index file only storing addresses of data records.
+Data Storage in Non-Clustered Index:
+
+In InnoDB, the data field of non-clustered indexes stores the values of the corresponding primary key, while in MyISAM, non-clustered index records store addresses.
+Lookup Operation Speed:
+
+MyISAM's lookup operation is fast, as it directly retrieves data using the address offset. In contrast, InnoDB first obtains the primary key and then searches for the record in the clustered index. Although not slow, InnoDB's process is not as direct as using the address for access.
+Primary Key Requirement:
+
+InnoDB requires a table to have a primary key, whereas MyISAM tables can exist without a primary key. If no primary key is explicitly specified, MySQL automatically selects a non-null and unique column as the primary key. If such a column does not exist, MySQL generates a hidden field as a 6-byte long integer for InnoDB tables.
+
 ① 在InnoDB存储引擎中，我们只需要根据主键值对 聚簇索引 进行一次查找就能找到对应的记录，而在 MyISAM 中却需要进行一次 回表 操作，意味着MyISAM中建立的索引相当于全部都是 二级索引 。
 
  ② InnoDB的数据文件本身就是索引文件，而MyISAM索引文件和数据文件是 分离的 ，索引文件仅保存数 据记录的地址。
