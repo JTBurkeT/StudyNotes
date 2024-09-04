@@ -2952,9 +2952,14 @@ DESC SELECT * FROM user_partitions WHERE id>200;
 
 * `index`
 
+
   当我们可以使用索引覆盖，但需要扫描全部的索引记录时，该表的访问方法就是`index`，比如这样：
 
   ```mysql
+	the created index is idx_key_part(key_part1,key_part2,key_part3), 
+	so obviously ref cannot be used since not following the left prefix index rule
+	hence you will see index because they full scan the index directly instead of table
+	since all the data needed is in index which has less data than the full table.
   mysql> EXPLAIN SELECT key_part2 FROM s1 WHERE key_part3 = 'a';
   ```
 
