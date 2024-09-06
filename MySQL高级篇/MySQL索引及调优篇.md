@@ -4975,6 +4975,35 @@ CREATE INDEX idx_age_stuno ON student(age,stuno);
 
 ### 5.4 filesort算法：双路排序和单路排序
 
+Filesort Algorithm: Two-Pass and Single-Pass Sorting
+When MySQL needs to sort data but the sorting columns are not indexed, it uses the filesort algorithm. This algorithm can operate in two modes: two-pass sorting (older and slower) and single-pass sorting (newer and faster).
+
+Two-Pass Sorting (Slower)
+In the early versions of MySQL (before 4.1), two-pass sorting was used. This method works by:
+
+Reading the row pointers (addresses where rows are stored) and the columns involved in the ORDER BY clause.
+Sorting the pointers based on the ORDER BY values.
+After sorting, going back to the disk to retrieve the full row data using the sorted pointers.
+This process requires two trips to the disk: one to get the sorting information and another to retrieve the actual data. Since disk operations are slow, this method is inefficient due to the high I/O cost.
+
+Single-Pass Sorting (Faster)
+With the introduction of MySQL 4.1, a faster method, single-pass sorting, was introduced. Instead of making two trips to the disk, MySQL:
+
+Reads all the required data (both sorting and non-sorting columns) in one go.
+Sorts the data in memory based on the ORDER BY columns.
+Outputs the sorted data directly.
+This approach eliminates the need for the second disk scan, making it much faster. It also transforms random disk reads into more efficient sequential reads.
+
+Pros and Cons of Single-Pass Sorting
+While single-pass sorting is generally faster, it comes with one potential downside: it uses more memory. Since it pulls all the row data into memory at once, it requires a large enough sort_buffer (the memory area used for sorting).
+
+If the data to be sorted is too large for the available memory (sort_buffer size), MySQL will have to split the data into smaller chunks, sort them individually, and then merge the results. This can result in additional I/O operations and reduce performance.
+
+Summary:
+Two-Pass Sorting: Reads the sorting columns first, sorts them, and then retrieves the full row data. This method is slower because it requires two trips to the disk.
+Single-Pass Sorting: Retrieves all the data at once and sorts it in memory, avoiding the second disk access. It is faster, but may require more memory. If the memory limit is exceeded, it can lead to extra I/O operations, diminishing performance.
+In most cases, single-pass sorting is the better option, but it’s important to ensure there is enough memory to handle large datasets.
+
 排序的字段若不在索引列上，则filesort会有两种算法：双路排序和单路排序
 
 **双路排序 （慢）**
